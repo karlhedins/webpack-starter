@@ -1,10 +1,32 @@
 const path = require("path");
 
-module.exports = {
-  entry: "./src/index.js",
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CleanWebpackPlugin = require("clean-webpack-plugin");
 
+module.exports = {
+  /* 
+    We set src/print.js as a new entry point (print) and change the output as well, so that it will dynamically generate bundle names, based on the entry point names:
+  */
+  entry: {
+    app: "./src/index.js",
+    print: "./src/print.js"
+  },
+
+  /* 
+    clean the /dist folder before each build, so that only used files will be generated.
+    
+    HtmlWebpackPlugin by default will generate its own index.html file, even though we already have one in the dist/ folder. This means that it will replace our index.html file with a newly generated one.
+  */
+  plugins: [
+    new CleanWebpackPlugin(["dist"]),
+    new HtmlWebpackPlugin({
+      title: "Output Management"
+    })
+  ],
+
+  // -> generates our print.bundle.js and app.bundle.js
   output: {
-    filename: "bundle.js",
+    filename: "[name].bundle.js",
     path: path.resolve(__dirname, "dist")
   },
 
