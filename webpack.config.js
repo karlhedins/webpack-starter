@@ -12,9 +12,22 @@ module.exports = {
     print: "./src/print.js"
   },
 
+  // use the inline-source-map option, which is good for illustrative purposes (though not for production)
+  // other example: eval-source-map - slow, byt yields the best quality SourceMaps for development.
+  devtool: "inline-source-map",
+
+  /*
+    tells webpack-dev-server to serve the files from the dist directory on localhost:8080 
+    keeps bundle files in memory and serves them as if they were real files mounted at the server's root path
+    If your page expects to find the bundle files in different path, you can change this with the publicPath option in the dev server's configuration.
+  */
+  devServer: {
+    contentBase: "./dist"
+  },
+
   /* 
     clean the /dist folder before each build, so that only used files will be generated.
-    
+
     HtmlWebpackPlugin by default will generate its own index.html file, even though we already have one in the dist/ folder. This means that it will replace our index.html file with a newly generated one.
   */
   plugins: [
