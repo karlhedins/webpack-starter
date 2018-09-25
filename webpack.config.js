@@ -1,15 +1,14 @@
 const path = require("path");
-
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = {
   /* 
     We set src/print.js as a new entry point (print) and change the output as well, so that it will dynamically generate bundle names, based on the entry point names:
   */
   entry: {
-    app: "./src/index.js",
-    print: "./src/print.js"
+    app: "./src/index.js"
   },
 
   // use the inline-source-map option, which is good for illustrative purposes (though not for production)
@@ -20,9 +19,12 @@ module.exports = {
     tells webpack-dev-server to serve the files from the dist directory on localhost:8080 
     keeps bundle files in memory and serves them as if they were real files mounted at the server's root path
     If your page expects to find the bundle files in different path, you can change this with the publicPath option in the dev server's configuration.
+
+    You can aslo use the CLI to modify the webpack-dev-server configuration with the following command: webpack-dev-server --hotOnly
   */
   devServer: {
-    contentBase: "./dist"
+    contentBase: "./dist",
+    hot: true
   },
 
   /* 
@@ -34,7 +36,8 @@ module.exports = {
     new CleanWebpackPlugin(["dist"]),
     new HtmlWebpackPlugin({
       title: "Output Management"
-    })
+    }),
+    new webpack.HotModuleReplacementPlugin()
   ],
 
   // -> generates our print.bundle.js and app.bundle.js
