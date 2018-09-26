@@ -1,7 +1,10 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
-const webpack = require("webpack");
+// const webpack = require("webpack");
+
+const postCssImport = require("postcss-import");
+const postcssPresetEnv = require("postcss-preset-env");
 
 module.exports = {
   /* 
@@ -23,8 +26,8 @@ module.exports = {
     You can aslo use the CLI to modify the webpack-dev-server configuration with the following command: webpack-dev-server --hotOnly
   */
   devServer: {
-    contentBase: "./dist",
-    hot: true
+    contentBase: "./dist"
+    // hot: true
   },
 
   /* 
@@ -36,8 +39,8 @@ module.exports = {
     new CleanWebpackPlugin(["dist"]),
     new HtmlWebpackPlugin({
       title: "Output Management"
-    }),
-    new webpack.HotModuleReplacementPlugin()
+    })
+    // new webpack.HotModuleReplacementPlugin()
   ],
 
   // -> generates our print.bundle.js and app.bundle.js
@@ -46,12 +49,29 @@ module.exports = {
     path: path.resolve(__dirname, "dist")
   },
 
+  /* 
+    From CRA docs:
+    "postcss" loader applies autoprefixer to our CSS.
+    "css" loader resolves paths in CSS and adds assets as dependencies.
+    "style" loader turns CSS into JS modules that inject <style> tags.
+    In production, we use a plugin to extract that CSS to a file, but
+    in development "style" loader enables hot editing of CSS.
+  */
   module: {
     rules: [
       {
         test: /\.css$/,
         // a <style> tag with the stringified css will be inserted into the <head> of your html file.
-        use: ["style-loader", "css-loader"]
+        use: [
+          "style-loader",
+          { loader: "css-loader", options: { importLoaders: 1 } },
+          {
+            loader: "postcss-loader",
+            options: {
+              plugins: () => [postCssImport(), postcssPresetEnv()]
+            }
+          }
+        ]
       }
     ]
   }

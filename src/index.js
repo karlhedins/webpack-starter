@@ -22,11 +22,22 @@ function component() {
   return element;
 }
 
-document.body.appendChild(component());
+function anchor() {
+  let element = document.createElement("a");
 
-if (module.hot) {
-  module.hot.accept("./print.js", function() {
-    console.log("Accepting the updated printMe module!");
-    printMe();
-  });
+  element.setAttribute("class", "signature");
+  element.setAttribute("href", "https://www.google.se/");
+  element.innerHTML = "link";
+
+  return element;
 }
+
+document.body.appendChild(component());
+document.body.appendChild(anchor());
+
+// if (module.hot) {
+//   module.hot.accept("./print.js", function() {
+//     console.log("Accepting the updated printMe module!");
+//     printMe();
+//   });
+// }
